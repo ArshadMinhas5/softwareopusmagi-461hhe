@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Required</title>
+    <link rel="icon" href="davi.jpg" type="image/jpeg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .background-slider {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .background-slider img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .background-slider img.active {
+            opacity: 1;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .alert-section {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .alert-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .alert-text {
+            font-size: 32px;
+            color: #d32f2f;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .subscription-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .plan-card {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .plan-card.custom {
+            border: 3px solid #ff6b6b;
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 40px;
+            transform: rotate(45deg);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .plan-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .plan-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .plan-price {
+            font-size: 48px;
+            color: #4CAF50;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .plan-price span {
+            font-size: 20px;
+            color: #666;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .plan-features li {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            color: #555;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .plan-features li:before {
+            content: "✓";
+            color: #4CAF50;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .custom-preview {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .custom-preview img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .payment-section {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .payment-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .payment-details {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .payment-info {
+            margin: 15px 0;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .payment-info strong {
+            color: #1976d2;
+            display: inline-block;
+            min-width: 180px;
+        }
+
+        .account-number {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 18px;
+            margin: 10px 0;
+            border: 2px solid #1976d2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .copy-btn {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #1565c0;
+            transform: scale(1.05);
+        }
+
+        .copy-btn.copied {
+            background: #4CAF50;
+        }
+
+        .whatsapp-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #25D366;
+            color: white;
+            padding: 20px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        .whatsapp-btn:hover {
+            background: #20BA5A;
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6);
+        }
+
+        .whatsapp-icon {
+            font-size: 30px;
+        }
+
+        .video-section {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .alert-text {
+                font-size: 24px;
+            }
+
+            .plan-price {
+                font-size: 36px;
+            }
+
+            .subscription-plans {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-info {
+                font-size: 16px;
+            }
+
+            .payment-info strong {
+                display: block;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-slider">
+        <img src="image1.jpg" class="active" alt="Background 1">
+        <img src="image2.jpg" alt="Background 2">
+        <img src="image3.jpg" alt="Background 3">
+    </div>
+    <div class="overlay"></div>
+
+    <div class="container">
+        <div class="alert-section">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-text">Your Free Trial / Subscription Has Expired</div>
+            <p style="color: #666; font-size: 18px; margin-top: 10px;">Please choose a subscription plan to continue using our services</p>
+        </div>
+
+        <div class="subscription-plans">
+            <div class="plan-card">
+                <div class="plan-header">
+                    <div class="plan-title">Standard Plan</div>
+                    <div class="plan-price">Rs. 4,000<span>/month</span></div>
+                </div>
+                <ul class="plan-features">
+                    <li>Full access to all features</li>
+                    <li>Monthly subscription</li>
+                    <li>Standard support</li>
+                    <li>Regular updates</li>
+                    <li>Secure hosting</li>
+                </ul>
+            </div>
+
+            <div class="plan-card custom">
+                <div class="plan-badge">CUSTOM</div>
+                <div class="plan-header">
+                    <div class="plan-title">Custom Plan</div>
+                    <div class="plan-price">Rs. 6,000<span>/month</span></div>
+                </div>
+                <ul class="plan-features">
+                    <li>Everything in Standard Plan</li>
+                    <li>Custom company name in URL</li>
+                    <li>Custom company logo</li>
+                    <li>Custom tab icon (favicon)</li>
+                
+                </ul>
+                <div class="custom-preview">
+                    <p style="margin-bottom: 10px; color: #666; font-weight: bold;">Custom Branding Example:</p>
+                    <img src="image4.jpg" alt="Custom URL and Logo Example">
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-section">
+            <div class="payment-title">💳 Payment Instructions</div>
+            <div class="payment-details">
+                <div class="payment-info">
+                    <strong>Bank:</strong> United Bank Limited (UBL)
+                </div>
+                <div class="payment-info">
+                    <strong>Account Title:</strong> Arshad Minhas
+                </div>
+                <div class="payment-info">
+                    <strong>Account Number:</strong>
+                    <div class="account-number">
+                        <span>0375315191363</span>
+                        <button class="copy-btn" onclick="copyToClipboard('0375315191363', this)">
+                            <span>📋</span>
+                            <span>Copy</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="payment-info">
+                    <strong>IBAN:</strong>
+                    <div class="account-number">
+                        <span>PK25UNIL0109000315191363</span>
+                        <button class="copy-btn" onclick="copyToClipboard('PK25UNIL0109000315191363', this)">
+                            <span>📋</span>
+                            <span>Copy</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="note">
+                    <strong>📌 Important:</strong> After making the payment, please send the transaction ID/screenshot to our WhatsApp number below.
+                </div>
+            </div>
+
+            <div class="whatsapp-section">
+                <p style="font-size: 18px; margin-bottom: 20px; color: #333;">Send Transaction ID via WhatsApp:</p>
+                <a href="https://wa.me/923129069017" class="whatsapp-btn" target="_blank">
+                    <span class="whatsapp-icon">📱</span>
+                    <span>+92 312 9069017</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="video-section">
+            <div class="video-title">🎥 How It Helps?</div>
+            <div class="video-container">
+                <iframe 
+                    src="https://www.youtube.com/embed/O3vH8H6s4_8" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const images = document.querySelectorAll('.background-slider img');
+        let currentImage = 0;
+
+        function changeBackground() {
+            images[currentImage].classList.remove('active');
+            currentImage = (currentImage + 1) % images.length;
+            images[currentImage].classList.add('active');
+        }
+
+        setInterval(changeBackground, 5000);
+
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerHTML;
+                button.classList.add('copied');
+                button.innerHTML = '<span>✓</span><span>Copied!</span>';
+                
+                setTimeout(() => {
+                    button.classList.remove('copied');
+                    button.innerHTML = originalText;
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy: ' + err);
+            });
+        }
+    </script>
+</body>
+</html>

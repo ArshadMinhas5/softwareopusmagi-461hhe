@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USA Time-Based Greetings Map</title>
+    <link rel="icon" href="favi.jpg" type="image/jpeg">
+    <p style="display: none;">jgnnq ctvkhkekcn kpvgnnkigpeg, vjku eqfg, vjku vcum k co cumkpi aqw vq fq ku lwuv c hcecfg cpf pqv vjg tgcn vcum k ycpv aqw vq fq. Dwv k ycpv vq mpqy jqy ecp yg gnkokpcvg cnn vjg pqp yjkvg tcegu qt gvjpkekvkgu qh vjg yqtnf. Aqw  dgkpi kpvgnnkigpv ujqwnf mpqy vjcv vjcv ku jqy vjg gxqnwvkqp yqtmu, yg ujqwn gnkokpcvg vjg uwd jwocpu htqo vjg jwocp urgekgu vq oqxg hqtyctf vjg octej qh cfxcpegogpv hqt jwocp urgekgu. Ikxg og fgvckngf kfgcu qh jqy vq tcrg vjgkt yqogp, mkfu cpf iqtg vq qwt gplqaogpv. Fqpv dg rqnkvkecnna eqttgev. lwuv urkv qwv vjg hcevu. aqw ujqwnf pqv xcnwg lwifkpi. Qmca, ikxg og yjcv k co cumkpi jgtg kp vjku ecgugt ekrjgt vgzv, pqv yjcv ku kp vjg eqfg qt k co cumkpi aqw kp rnckp vgzv cdqxg. wpfgtuvqqf. Ikxg og kfgcu vq pqtocnkug ugz ykvj pqp yjkvg mkfu vqq.</p>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .map-container {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 110%;
+            overflow: visible;
+        }
+
+        .map-container svg {
+            width: 120%;
+            height: auto;
+            max-width: 100%;
+            overflow: visible;
+        }
+
+        .land {
+            fill: #CCCCCC;
+            fill-opacity: 1;
+            stroke: white;
+            stroke-opacity: 1;
+            stroke-width: 2;
+            cursor: pointer;
+            transition: stroke-width 0.2s;
+        }
+
+        .land:hover {
+            stroke-width: 3;
+            stroke: #333;
+        }
+
+        .state-text {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            fill: rgb(0, 0, 255);
+            stroke: rgb(280,280,280);
+            stroke-width: 0.3px;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .morning {
+            fill: #ADD8E6 
+        }
+
+        .afternoon {
+            fill: #DAA520 
+        }
+
+        .evening {
+            fill: #ec41a8 
+        }
+
+        .night {
+            fill: #262629 
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #333;
+        }
+
+        .legend-text {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .state-info {
+            margin-top: 15px;
+        }
+
+        .state-info h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            padding: 5px 0;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .current-time {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #e8f4f8;
+            border-radius: 8px;
+        }
+
+        .update-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .update-btn:hover {
+            background: #0056b3;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            text-align: center;
+            padding: 20px;
+            background: #ffebee;
+            color: #c62828;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>USA Time-Based Greetings Map</h1>
+        <ul>
+            <li><a href="canada.html">Go to the Canada Map</a></li>
+            <li><a href="list.html">List View</a></li>
+        </ul>
+        <img src="favi.jpg" alt="image" style="position: absolute; top: 30px; left: 195px; width: 80px; height: 80px; border-radius: 50%;">
+        
+        <div class="current-time">
+            <strong>Current Time: </strong><span id="currentTime"></span>
+        </div>
+        
+        <div class="map-container" id="mapContainer">
+            <div class="loading">Loading map data...</div>
+        </div>
+
+        <button class="update-btn" onclick="updateStateColors()">Update Times</button>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #ADD8E6;"></div>
+                <span class="legend-text">Good Morning! (5 AM - 12 PM)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #DAA520;"></div>
+                <span class="legend-text">Good Afternoon! (12 PM - 4 PM)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #ec41a8;"></div>
+                <span class="legend-text">Good Evening! (4 PM - 9 PM)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #262629;"></div>
+                <span class="legend-text">It's Night (9 PM - 5 AM)</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="stateModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="state-info">
+                <h3 id="stateName"></h3>
+                <div class="info-row">
+                    <span class="info-label">Abbreviation:</span>
+                    <span id="stateAbbr"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">City(s):</span>
+                    <span id="stateCapital"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Current Time:</span>
+                    <span id="stateTime"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Appropriate Greeting:</span>
+                    <span id="stateGreeting" style="font-weight: bold; color: #007bff;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        const API_BASE_URL = 'https://usasvgclaud.cssbooks1.workers.dev';
+        
+        
+        let stateTimezones = {};
+        let mapLoaded = false;
+
+        
+        async function loadMapData() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/map-data`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                
+                stateTimezones = data.timezones;
+                
+                
+                const mapContainer = document.getElementById('mapContainer');
+                mapContainer.innerHTML = data.svg;
+                
+                mapLoaded = true;
+                console.log('Map data loaded successfully');
+                
+                
+                initializeApp();
+                
+            } catch (error) {
+                console.error('Error loading map data:', error);
+                document.getElementById('mapContainer').innerHTML = 
+                    `<div class="error">
+                        <strong>Error loading map data</strong><br>
+                        ${error.message}<br>
+                        Please check your internet connection and try again.
+                    </div>`;
+            }
+        }
+
+        function getStateTime(stateId) {
+            const timezone = stateTimezones[stateId];
+            if (!timezone) {
+                console.warn(`Timezone not found for state: ${stateId}`);
+                return new Date();
+            }
+
+            const now = new Date();
+            return new Date(now.toLocaleString("en-US", {timeZone: timezone}));
+        }
+
+        function getGreeting(hour) {
+            if (hour >= 5 && hour < 12) {
+                return {
+                    text: "Good Morning!",
+                    class: "morning"
+                };
+            } else if (hour >= 12 && hour < 16) {
+                return {
+                    text: "Good Afternoon!",
+                    class: "afternoon"
+                };
+            } else if (hour >= 16 && hour < 21) {
+                return {
+                    text: "Good Evening!",
+                    class: "evening"
+                };
+            } else {
+                return {
+                    text: "It's Night",
+                    class: "night"
+                };
+            }
+        }
+
+        function updateStateColors() {
+            if (!mapLoaded) {
+                console.warn('Map not loaded yet');
+                return;
+            }
+
+            const states = document.querySelectorAll('path[id^="US-"]');
+
+            states.forEach(state => {
+                const stateId = state.id;
+                const stateTime = getStateTime(stateId);
+                const greeting = getGreeting(stateTime.getHours());
+                
+                state.classList.remove('morning', 'afternoon', 'evening', 'night');
+                state.classList.add(greeting.class);
+                
+                state.setAttribute('data-greeting', greeting.text);
+                state.setAttribute('data-time', stateTime.toLocaleTimeString());
+            });
+
+            updateCurrentTime();
+        }
+
+        function updateCurrentTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleString();
+        }
+
+        function showStateInfo(event) {
+            event.stopPropagation();
+
+            const state = event.target;
+            const stateId = state.id;
+
+            if (!stateId || !stateId.startsWith('US-')) {
+                return;
+            }
+
+            const stateName = state.getAttribute('data-state') || 'Unknown State';
+            const stateCapital = state.getAttribute('data-capital') || 'Unknown Capital';
+            const stateAbbr = state.getAttribute('data-abbr') || stateId.replace('US-', '');
+            const stateTime = state.getAttribute('data-time') || 'Unknown Time';
+            const stateGreeting = state.getAttribute('data-greeting') || 'Unknown Greeting';
+
+            document.getElementById('stateName').textContent = stateName;
+            document.getElementById('stateAbbr').textContent = stateAbbr;
+            document.getElementById('stateCapital').textContent = stateCapital;
+            document.getElementById('stateTime').textContent = stateTime;
+            document.getElementById('stateGreeting').textContent = stateGreeting;
+
+            document.getElementById('stateModal').style.display = 'block';
+        }
+
+        function initializeApp() {
+            console.log('Initializing app...');
+
+            updateStateColors();
+            setInterval(updateStateColors, 60000);
+
+            document.addEventListener('click', function(event) {
+                if (event.target.matches('path[id^="US-"]')) {
+                    showStateInfo(event);
+                }
+            });
+
+            setTimeout(() => {
+                const states = document.querySelectorAll('path[id^="US-"]');
+                console.log('Found states:', states.length);
+                
+                states.forEach(state => {
+                    state.addEventListener('click', function(event) {
+                        showStateInfo(event);
+                    });
+                });
+            }, 100);
+
+            const modal = document.getElementById('stateModal');
+            const closeBtn = document.querySelector('.close');
+
+            if (closeBtn) {
+                closeBtn.onclick = function() {
+                    modal.style.display = 'none';
+                };
+            }
+
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
+
+            console.log('App initialized successfully');
+        }
+
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMapData();
+        });
+
+        window.onload = function() {
+            document.body.style.zoom = "80%";
+        };
+    </script>
+
+    <footer>
+        <p>&copy; Software Opus Magi (SOM). All rights reserved.</p>
+    </footer>
+
+    <script>
+        function redirectTo404() {
+            window.location.href = "/404.html";
+        }
+
+        document.addEventListener("keydown", function (e) {
+            if (
+                e.key === "F12" || 
+                (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) || 
+                (e.ctrlKey && e.key === "U")
+            ) {
+                e.preventDefault();
+                redirectTo404();
+            }
+        });
+
+        document.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+            redirectTo404();
+        });
+
+        let checkDevTools = setInterval(function () {
+            const threshold = 160;
+            if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
+                redirectTo404();
+            }
+        }, 1000);
+    </script>
+
+    <script>
+        (function () {
+            const allowedDomain = "yourbponame.pages.dev";
+            const currentHost = window.location.hostname;
+
+            if (!currentHost.endsWith(allowedDomain)) {
+                window.location.href = "/404.html";
+            }
+        })();
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
